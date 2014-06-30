@@ -6,9 +6,9 @@ See http://www.haskell.org/haskellwiki/99_questions/1_to_10
 #1. Gets the last item from a list.
 
 \begin{code}
-myLast :: [a] -> a
-myLast [x] = x
-myLast (_:xs) = myLast xs
+> myLast :: [a] -> a
+> myLast [x] = x
+> myLast (_:xs) = myLast xs
 \end{code}
 
 <!-- stop literate haskell -->
