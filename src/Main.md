@@ -5,13 +5,11 @@ See http://www.haskell.org/haskellwiki/99_questions/1_to_10
 <!-- start literate haskell -->
 #1. Gets the last item from a list.
 
-\begin{code}
+~~~ {.haskell}
 > myLast :: [a] -> a
 > myLast [x] = x
 > myLast (_:xs) = myLast xs
-\end{code}
-
-<!-- stop literate haskell -->
+~~~
 
 -- #2. Gets the second from the last item from a list.
 myPenultimate :: [a] -> a
