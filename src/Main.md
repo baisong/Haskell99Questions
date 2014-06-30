@@ -2,7 +2,7 @@
 ## My solutions to Haskell 99 Questions
 See http://www.haskell.org/haskellwiki/99_questions/1_to_10
 
-<!-- literate haskell -->
+<!-- start literate haskell -->
 #1. Gets the last item from a list.
 
 \begin{code}
