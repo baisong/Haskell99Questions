@@ -30,5 +30,44 @@ elementAt'' (x:_) 1  = x
 elementAt'' (_:xs) i = elementAt'' xs (i - 1)
 elementAt'' _ _      = error "Index out of bounds"
 
+-- #4 Find length of list
+myLength :: [a] -> Int
+myLength [] = 0
+myLength (_:xs) = 1 + myLength xs
+
+-- ... using an accumulator
+myLength' :: [a] -> Int
+myLength' list = myLength_acc list 0
+	where
+		myLength_acc [] n = n
+		myLength_acc (_:xs) n = myLength_acc xs (n + 1)
+
+-- #5 Reverse a list
+myReverse :: [a] -> [a]
+myReverse []     = []
+myReverse [x]    = [x]
+myReverse (x:xs) = myReverse xs ++ [x]
+
+-- ... formal function definition
+myReverse'          :: [a] -> [a]
+myReverse'          =  foldl (flip (:)) []
+
+-- similar, but more readable
+myReverse'' :: [a] -> [a]
+myReverse'' list = reverse''' list []
+  where
+    reverse''' [] reversed     = reversed
+    reverse''' (x:xs) reversed = reverse''' xs (x:reversed)
+
+-- #6 Find whether palindrome or no
+isPalindrome :: (Eq a) => [a] -> Bool
+isPalindrome xs = (myReverse xs) == xs
+
+-- ... other solutions
+isPalindrome' []  = True
+isPalindrome' [_] = True
+isPalindrome' xs  = (head xs) == (last xs) && (isPalindrome' $ init $ tail xs)
+
 -- Run a test.
-main = putStrLn [eAt "12345" 4]
+main = putStrLn $ show $ isPalindrome "AMANAMA"
+
