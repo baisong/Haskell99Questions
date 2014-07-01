@@ -68,6 +68,26 @@ isPalindrome' []  = True
 isPalindrome' [_] = True
 isPalindrome' xs  = (head xs) == (last xs) && (isPalindrome' $ init $ tail xs)
 
--- Run a test.
-main = putStrLn $ show $ isPalindrome "AMANAMA"
+-- Allow for nested lists like (1 (2, (3, 4), 5))
+data NestedList a = Elem a | List [NestedList a]
 
+-- #7 Flatten a nested list.
+flatten :: NestedList a -> [a]
+flatten (Elem a)      = [a]
+flatten (List (x:xs)) = flatten x ++ flatten (List xs)
+flatten (List [])     = []
+
+-- ... Using a where block to hold an xs parameter.
+flatten2 :: NestedList a -> [a]
+flatten2 a = flt' a []
+  where flt' (Elem x)      xs = x:xs
+        flt' (List (x:ls)) xs = flt' x (flt' (List ls) xs)
+        flt' (List [])     xs = xs
+
+-- ... Terse solution using concatMap
+flatten' :: NestedList a -> [a]
+flatten' (Elem x) = [x]
+flatten' (List x) = concatMap flatten' x
+
+-- Run a test.
+main = putStrLn $ show $ flatten2 (List [Elem 1, List [Elem 2, List [Elem 3, Elem 4], Elem 5]])
