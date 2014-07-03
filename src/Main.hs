@@ -3,6 +3,8 @@
 -- @see http://www.haskell.org/haskellwiki/99_questions/1_to_10
 ----------------------------------------------------------------------------------------------------
 
+import Data.List
+
 -- #1. Gets the last item from a list.
 myLast :: [a] -> a
 myLast [x] = x
@@ -89,5 +91,40 @@ flatten' :: NestedList a -> [a]
 flatten' (Elem x) = [x]
 flatten' (List x) = concatMap flatten' x
 
+-- #8 Compress
+-- If a list contains repeated elements
+-- they should be replaced with a single copy of the element.
+-- The order of the elements should not be changed.
+compress :: (Eq a) => [a] -> [a]
+compress []       = []
+compress [x]      = [x]
+compress (x:xs)   = if x == head xs then compress xs else [x] ++ compress xs
+
+-- ...super terse
+-- uses Data.List.group
+compress' :: Eq a => [a] -> [a]
+compress' = map head . group
+
+-- ...super terse no type definition needed!
+compress'' xs = map head $ group xs
+
+-- ...An alternative solution is
+compress''' (x:ys@(y:_))
+    | x == y    = compress''' ys
+    | otherwise = x : compress''' ys
+compress''' ys = ys
+
+-- ...Another possibility using foldr
+compress'''' :: (Eq a) => [a] -> [a]
+compress'''' = foldr skipDups []
+    where skipDups x [] = [x]
+          skipDups x acc
+                | x == head acc = acc
+                | otherwise = x : acc
+                
+-- ...A very simple approach:
+compress''''' []     = []
+compress''''' (x:xs) = x : (compress''''' $ dropWhile (== x) xs)
+
 -- Run a test.
-main = putStrLn $ show $ flatten2 (List [Elem 1, List [Elem 2, List [Elem 3, Elem 4], Elem 5]])
+main = putStrLn $ show (compress'' "aabcccccccccccccccc")
