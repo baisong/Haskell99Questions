@@ -92,6 +92,10 @@ flatten' (Elem x) = [x]
 flatten' (List x) = concatMap flatten' x
 
 -- #8 Compress
+--
+-- \> compress "aabcccccccccccccccc"
+-- "abc"
+-- 
 -- If a list contains repeated elements
 -- they should be replaced with a single copy of the element.
 -- The order of the elements should not be changed.
@@ -121,10 +125,33 @@ compress'''' = foldr skipDups []
           skipDups x acc
                 | x == head acc = acc
                 | otherwise = x : acc
-                
+
 -- ...A very simple approach:
 compress''''' []     = []
 compress''''' (x:xs) = x : (compress''''' $ dropWhile (== x) xs)
 
+-- #9 Pack
+--
+-- \> pack ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e']
+-- ["aaaa","b","cc","aa","d","eeee"]
+--
+
+-- Simple solution
+pack :: (Eq a) => [a] -> [[a]]
+pack [] = []
+pack [x] = [[x]]
+pack (x:xs) = if x `elem` (head (pack xs))
+              then (x:(head (pack xs))):(tail (pack xs))
+              else [x]:(pack xs)
+
+-- Using "@" (read "as") syntactic sugar and a recursive where clause after pattern guards.
+-- http://stackoverflow.com/questions/1153465/what-does-the-symbol-mean-in-reference-to-lists-in-haskell
+pack' [] = []
+pack' [x] = [[x]]
+pack' (x:xs)
+    | x == head  h_p_xs = (x : h_p_xs) : t_p_hs
+    | otherwise         = [x] : p_xs
+    where p_xs@(h_p_xs:t_p_hs) = pack' xs
+
 -- Run a test.
-main = putStrLn $ show (compress'' "aabcccccccccccccccc")
+main = putStrLn $ show (pack ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e'])
