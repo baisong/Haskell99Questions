@@ -160,8 +160,12 @@ pack' (x:xs)
 -- [(4,'a'),(1,'b'),(2,'c'),(2,'a'),(1,'d'),(4,'e')]
 --
 
+-- Using map
 encode :: (Eq a) => [a] -> [(Int, a)]
 encode xs = map (\x -> (myLength x, head x)) (pack xs)
-  
+
+-- Equivalent, but written as a list comprehension
+encode' xs = [(length x, head x) | x <- group xs]
+
 -- Run a test.
-main = putStrLn $ show (encode "aaaabccaadeeee")
+main = putStrLn $ show (encode' "aaaabccaadeeee")
