@@ -95,7 +95,7 @@ flatten' (List x) = concatMap flatten' x
 --
 -- \> compress "aabcccccccccccccccc"
 -- "abc"
--- 
+--
 -- If a list contains repeated elements
 -- they should be replaced with a single copy of the element.
 -- The order of the elements should not be changed.
@@ -132,7 +132,7 @@ compress''''' (x:xs) = x : (compress''''' $ dropWhile (== x) xs)
 
 -- #9 Pack
 --
--- \> pack ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e']
+-- \> pack "aaaabccaadeeee"
 -- ["aaaa","b","cc","aa","d","eeee"]
 --
 
@@ -153,5 +153,15 @@ pack' (x:xs)
     | otherwise         = [x] : p_xs
     where p_xs@(h_p_xs:t_p_hs) = pack' xs
 
+
+-- #10
+--
+-- \> encode "aaaabccaadeeee"
+-- [(4,'a'),(1,'b'),(2,'c'),(2,'a'),(1,'d'),(4,'e')]
+--
+
+encode :: (Eq a) => [a] -> [(Int, a)]
+encode xs = map (\x -> (myLength x, head x)) (pack xs)
+  
 -- Run a test.
-main = putStrLn $ show (pack ['a', 'a', 'a', 'a', 'b', 'c', 'c', 'a', 'a', 'd', 'e', 'e', 'e', 'e'])
+main = putStrLn $ show (encode "aaaabccaadeeee")
