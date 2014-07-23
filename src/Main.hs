@@ -167,5 +167,31 @@ encode xs = map (\x -> (myLength x, head x)) (pack xs)
 -- Equivalent, but written as a list comprehension
 encode' xs = [(length x, head x) | x <- group xs]
 
+-- #11
+--
+-- encodeModified "aaaabccaadeeee"
+-- [Multiple 4 'a', Single 'b', Multiple 2 'c', Multiple 2 'a', Single 'd', Multiple 4 'e']
+--
+-- Utility type for Haskell's homogeneous lists
+data ListItem a = Sng a | Mlt Int a
+  deriving (Show)
+
+-- Solution using helper 
+encodeModified :: Eq a => [a] -> [ListItem a]
+encodeModified = map encodeHelper . encode
+    where
+      encodeHelper (1,x) = Sng x
+      encodeHelper (n,x) = Mlt n x 
+
+-- ...Possible to use list comprehension?
+--encodeModified' :: Eq a => [a] -> [ListItem a]
+--encodeModified' [x:xs] = [encodeHelper' x | x <- encode xs]
+--    where
+--      encodeHelper' (1,x) = Sng x
+--      encodeHelper' (n,x) = Mlt n x
+-- Solution -----------------------------------------------------------------------------------------> encodeModified xs = [y | x <- group xs, let y = if (length x) == 1 then Single (head x) else Multiple (length x) (head x)]
+ 
 -- Run a test.
-main = putStrLn $ show (encode' "aaaabccaadeeee")
+main = putStrLn $ show (encodeModified "aaaabccaadeeee")
+
+
